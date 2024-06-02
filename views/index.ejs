@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Livros</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #333;
+      color: #fff;
+    }
+    .table thead th {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .page-link {
+      color: #007bff;
+    }
+    .page-link:hover {
+      color: #0056b3;
+    }
+    .active .page-link {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="my-4">Catálogo de Livros</h1>
+
+    <form class="mb-4" method="GET" action="/">
+      <div class="form-row">
+        <div class="col">
+          <input type="text" name="busca" class="form-control" placeholder="Buscar por título">
+        </div>
+        <div class="col">
+          <input type="text" name="autor" class="form-control" placeholder="Filtrar por autor">
+        </div>
+        <div class="col">
+          <input type="number" name="ano" class="form-control" placeholder="Filtrar por ano">
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+      </div>
+    </form>
+
+    <table class="table table-bordered table-dark">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Autor</th>
+          <th>ISBN</th>
+          <th>Páginas</th>
+          <th>Ano</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% livros.forEach(livro => { %>
+          <tr>
+            <td><%= livro.titulo %></td>
+            <td><%= livro.autor %></td>
+            <td><%= livro.ISBN %></td>
+            <td><%= livro.paginas %></td>
+            <td><%= livro.ano %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <% 
+        const maxPaginas = 20;
+        const startPage = Math.max(paginaAtual - Math.floor(maxPaginas / 2), 1);
+        const endPage = Math.min(startPage + maxPaginas - 1, totalPaginas);
+
+        if (startPage > 1) { %>
+          <li class="page-item">
+            <a class="page-link" href="/?pagina=1">1</a>
+          </li>
+          <% if (startPage > 2) { %>
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          <% } %>
+        <% } %>
+
+        <% for (let i = startPage; i <= endPage; i++) { %>
+          <li class="page-item <%= i === paginaAtual ? 'active' : '' %>">
+            <a class="page-link" href="/?pagina=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+
+        <% if (endPage < totalPaginas) { %>
+          <% if (endPage < totalPaginas - 1) { %>
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          <% } %>
+          <li class="page-item">
+            <a class="page-link" href="/?pagina=<%= totalPaginas %>"><%= totalPaginas %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+</body>
+</html>
